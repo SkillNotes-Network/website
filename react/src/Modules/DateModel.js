@@ -14,52 +14,52 @@ export default class DateModel {
 	getMonths() {
 		return [
 			{
-				title: 'January',
-				value: '01'
+				value: '01',
+				label: 'January'
 			},
 			{
-				title: 'February',
-				value: '02'
+				value: '02',
+				label: 'February'
 			},
 			{
-				title: 'March',
-				value: '03'
+				value: '03',
+				label: 'March'
 			},
 			{
-				title: 'April',
-				value: '04'
+				value: '04',
+				label: 'April'
 			},
 			{
-				title: 'May',
-				value: '05'
+				value: '05',
+				label: 'May'
 			},
 			{
-				title: 'June',
-				value: '06'
+				value: '06',
+				label: 'June'
 			},
 			{
-				title: 'July',
-				value: '07'
+				value: '07',
+				label: 'July'
 			},
 			{
-				title: 'August',
-				value: '08'
+				value: '08',
+				label: 'August'
 			},
 			{
-				title: 'September',
-				value: '09'
+				value: '09',
+				label: 'September'
 			},
 			{
-				title: 'October',
-				value: '10'
+				value: '10',
+				label: 'October'
 			},
 			{
-				title: 'November',
-				value: '11'
+				value: '11',
+				label: 'November'
 			},
 			{
-				title: 'December',
-				value: '12'
+				value: '12',
+				label: 'December'
 			},
 		];
 	}
@@ -111,19 +111,19 @@ export default class DateModel {
 	}
 
 	calcDays(arr = [], maxDays = 31) {
-		for (let i = 1; i <= maxDays; i++) arr.push({value: i});
+		for (let i = 1; i <= maxDays; i++) arr.push({ value: i, label: i });
 	}
 
 	calcYear(arr = [], testLy = false, ly = this.curr) {
 		if (!testLy) {
 			for (let i = ly; i > ly - 120; i--) {
-				arr.push({value: i});
+				arr.push({ value: i, label: i });
 			}
 		} else {
 			if (!this.isLeapYear(ly)) {
 				for (let i = ly; i > ly - 120; i--) {
 					if (this.isLeapYear(i)) {
-						arr.push({value: i});
+						arr.push({ value: i, label: i });
 					}
 				}
 			} else {

@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import { useStateContext } from "../Contexts/ContextProvider";
 import axiosClient from "../axios-clint";
+import Select from 'react-select';
 import { Visibility, VisibilityOff } from '../component/Icons/Visibility';
 import Language from "../component/Form/Captcha.jsx";
 import Profession from "../component/Form/Profession.jsx";
 import Bullseye from "../component/Form/Bullseye.jsx";
 import Input from "../component/Form/Input.jsx";
 import SelectLayout from "../component/Form/SelectLayout.jsx";
-import Select from "../component/Form/Select.jsx";
 import DateModel from "../Modules/DateModel.js";
 import TitleAttrMode from '../Modules/TitleAttrMode.js';
 import LongButton from "../component/Form/LongButton.jsx";
@@ -33,12 +33,12 @@ const Signup = () => {
 	const [role, setRole] = useState(null);
 	const [captcha, setCaptcha] = useState(null);
 	const [name, setName] = useState('');
-	const [selectMonth, setSelectMonth] = useState('');
-	const [openMonth, setOpenMonth] = useState(false);
-	const [openDay, setOpenDay] = useState(false);
-	const [openYear, setOpenYear] = useState(false);
-	const [selectDay, setSelectDay] = useState('');
-	const [selectYear, setSelectYear] = useState('');
+	const [focusMonth, setFocusMonth] = useState(false);
+	const [focusDay, setFocusDay] = useState(false);
+	const [focusYear, setFocusYear] = useState(false);
+	const [selectMonth, setSelectMonth] = useState(null);
+	const [selectDay, setSelectDay] = useState(null);
+	const [selectYear, setSelectYear] = useState(null);
 	const [email, setEmail] = useState('');
 	const [pwd, setPwd] = useState('');
 	const [pwdConfirm, setPwdConfirm] = useState('');
@@ -143,11 +143,6 @@ const Signup = () => {
 		const inputEl = e.currentTarget;
 		DOM.labelEl = inputEl.nextElementSibling;
 
-		if (inputEl.nextElementSibling.localName === 'datalist') {
-			inputEl.classList.add('foc-select');
-			DOM.labelEl = DOM.labelEl.nextElementSibling;
-		}
-
 		setNameStates(inputEl.name === 'name');
 
 		if (inputEl.classList.contains('is-invalid')) {
@@ -177,31 +172,6 @@ const Signup = () => {
 			}
 		}
 	};
-
-	const blurSelect = (inputEl) => {
-		const labelEl = inputEl.nextElementSibling.nextElementSibling;
-
-		inputEl.classList.remove('foc-select');
-		labelEl.classList.remove('foc-blue');
-
-		handleOpenDataList(document.querySelectorAll('[data-select]'));
-	}
-
-	const handleOpenDataList = (selectList) => {
-		const checkItem = [];
-
-		setTimeout(() => {
-			selectList.forEach((el) => {
-				checkItem.push(el.classList.contains('foc-select'));
-			});
-
-			if (checkItem.every((b) => !b)) {
-				if (openMonth) setOpenMonth(false);
-				if (openDay) setOpenDay(false);
-				if (openYear) setOpenYear(false);
-			}
-		}, 100);
-	}
 
 	const setNameStates = (condition = false, focus = true) => {
 		if (condition) {
@@ -288,115 +258,16 @@ const Signup = () => {
 
 	// Validation Optics
 	const setInvalid = (el = {}) => {
+		if (el !== null) return
 		el.classList.add('is-invalid');
 		el.nextElementSibling.classList.add('is-invalid');
 	};
 
 	const setValid = (el = {}) => {
+		if (el !== null) return
 		el.classList.remove('is-invalid');
 		el.nextElementSibling.classList.remove('is-invalid');
 	};
-
-	// to Step 3 handle onChange
-	const handleChangeByInputEl = (tarEv) => {
-		switch (tarEv.name) {
-			case 'month':
-				setOpenMonth(!openMonth);
-				if (!openMonth) {
-					setOpenDay(false);
-					setOpenYear(false);
-				}
-				break;
-			case 'day':
-				setOpenDay(!openDay);
-				if (!openDay) {
-					setOpenMonth(false);
-					setOpenYear(false);
-				}
-				break;
-			case 'year':
-				setOpenYear(!openYear);
-				if (!openYear) {
-					setOpenDay(false);
-					setOpenMonth(false);
-				}
-				break;
-			default:
-				console.error('ERROR: Event is not defined!');
-				break;
-		}
-	}
-
-	const handleChangeByOptionEl = (tarEv, open = false) => {
-		switch (tarEv.parentNode.id) {
-			case 'month':
-				setSelectMonth(tarEv.value);
-				(!open) ? setOpenMonth(!openMonth) : setOpenMonth(open);
-				break;
-			case 'day':
-				setSelectDay(tarEv.value);
-				(!open) ? setOpenDay(!openDay) : setOpenDay(open);
-				break;
-			case 'year':
-				setSelectYear(tarEv.value);
-				(!open) ? setOpenYear(!openYear) : setOpenYear(open);
-				break;
-			default:
-				console.error('ERROR: Event is not defined!');
-				break;
-		}
-		tarEv.parentNode.previousSibling.focus();
-	}
-
-	const selectKeyPress = (e) => {
-		const pressKey = e.keyCode === 38 || e.keyCode === 40 || e.keyCode === 13 || e.keyCode === 9 || e.keyCode === 39;
-
-		if (pressKey) {
-			const optionItem = Array.from(e.target.nextElementSibling.children);	
-			
-			optionItem.forEach((optEl, i) => {
-				const dekCurrVal = Number(e.target.dataset.select) - 1;
-				const inkCurrVal = Number(e.target.dataset.select) + 1;
-				const isNotYear = e.target.name !== 'year';
-
-				switch (e.keyCode) {
-					case 9:
-						if (openMonth) {
-							setOpenMonth(false);
-							e.preventDefault();
-						}
-						if (openDay) {
-							setOpenDay(false);
-							e.preventDefault();
-						}
-						if (openYear) {
-							setOpenYear(false);
-							e.preventDefault();
-						}
-						break;
-					case 38:
-						if ((isNotYear ? dekCurrVal : inkCurrVal) === Number(optEl.value)) {
-							handleChangeByOptionEl(optEl, true);
-						} else {
-							(i === 0) && handleChangeByOptionEl(optionItem[optionItem.length - 1], true);
-						}
-						break;
-					case 40:
-						if ((isNotYear ? inkCurrVal : dekCurrVal) === Number(optEl.value)) {
-							handleChangeByOptionEl(optEl, true);
-						} else {
-							(i === 0) && handleChangeByOptionEl(optionItem[0], true);	
-						}
-						break;
-					default:
-						setOpenMonth(false);
-						setOpenDay(false);
-						setOpenYear(false);
-						break;
-				}
-			});
-		}
-	}
 
 	// Step 1: Profession
 	const checkStep1 = () => {
@@ -522,42 +393,39 @@ const Signup = () => {
 					<SelectLayout 
 						month={
 						<Select 
-							onFocus={focusInput} 
-							onClick={(e) => handleChangeByInputEl(e.target)}
-							onChange={checkStep3} 
-							onKeyDown={selectKeyPress} 
-							onBlur={(e) => blurSelect(e.target)} 
-							open={openMonth} 
-							optClick={(e) => handleChangeByOptionEl(e.target)}
-							getOptions={date.getMonths()} 
-							value={selectMonth} name={'month'}
+							name="month"
+							onFocus={() => setFocusMonth(true)}
+							onBlur={() => setFocusMonth(false)}
+							defaultValue={selectMonth}
+							onChange={setSelectMonth} 
+							options={date.getMonths()} 
+							placeholder=''
 						/>}
 						day={
 						<Select 
-							onFocus={focusInput} 
-							onClick={(e) => handleChangeByInputEl(e.target)} 
-							onChange={checkStep3} 
-							onKeyDown={selectKeyPress} 
-							onBlur={(e) => blurSelect(e.target)} 
-							open={openDay} 
-							optClick={(e) => handleChangeByOptionEl(e.target)}
-							getOptions={date.getDays()} 
-							value={selectDay} name={'day'}
+							name="day"	
+							onFocus={() => setFocusDay(true)}
+							onBlur={() => setFocusDay(false)}
+							defaultValue={selectDay}
+							onChange={setSelectDay} 
+							options={date.getDays()} 
+							placeholder=''
 						/>
 						}
 						year={
 						<Select 
-							onFocus={focusInput} 
-							onClick={(e) => handleChangeByInputEl(e.target)} 
-							onChange={checkStep3} 
-							onKeyDown={selectKeyPress} 
-							onBlur={(e) => blurSelect(e.target)} 
-							open={openYear} 
-							optClick={(e) => handleChangeByOptionEl(e.target)}
-							getOptions={date.getYears()} 
-							value={selectYear} name={'year'}
+							name="year"
+							onFocus={() => setFocusYear(true)}
+							onBlur={() => setFocusYear(false)}
+							defaultValue={selectYear}
+							onChange={setSelectYear} 
+							options={date.getYears()} 
+							placeholder=''
 						/>
 						}
+						focMonth={focusMonth}
+						focDay={focusDay}
+						focYear={focusYear}
 						feedback={(errors && errors.birth) && errors.birth[0]}
 					 />}
 					{(count === 4 && !errStatus) &&
