@@ -1,0 +1,203 @@
+$focus-blue: rgba(0, 60, 255, 0.5);
+
+.form,
+datalist {
+	background: white;
+}
+
+.form {
+	height: 100%;
+	padding-top: 5vh;
+}
+
+.form-middle {
+	width: 100%;
+	height: 100%;
+	background: rgba(0, 0, 0, .25);
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 9;
+}
+
+.server-err {
+	width: min(100%, max(450px));
+	height: 600px;
+	min-height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	.err-msg {
+		text-align: center;
+		font-size: calc(1.25vw + .6em);
+	}
+}
+
+.form-headline {
+	font-size: 1.85rem;
+}
+
+.fhlh2 {
+	font-size: 2rem;
+}
+.fhlh3 {
+	font-size: 1.2rem;
+}
+
+.form-login-row {
+	width: 300px;
+	max-width: 100%;
+}
+
+.form-signup-row {
+	width: 450px;
+	max-width: 100%;
+}
+
+.form-stepof {
+	padding: .78rem 0;
+	margin-bottom: 1.2rem;
+	font-size: 1.15rem;
+	font-weight: 600;
+	color: rgb(59, 59, 59);
+}
+$control-padd: 1.3rem;
+.control-box {
+	position: relative;
+	padding-bottom: $control-padd;
+
+	.letter-counter {
+		position: absolute;
+		top: 3px;
+		right: 10px;
+		color: grey;
+		font-size: .95rem;
+		font-weight: 400;
+		font-family: 'Roboto', 'Open Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+	}
+}
+$elect-height: 4rem;
+.bday-form {
+	cursor: pointer;
+	height: $elect-height;
+}
+.foc-select {
+	border-color: $form-select-focus-border-color;
+	box-shadow: inset 0 0 0 2px $focus-blue;
+}
+datalist {
+	background-size: 1.1rem;
+	font-size: 1.2rem;
+	padding: 1px 2px;
+  border-radius: 2px; 
+	border: 1px solid rgba(0, 0, 0, .1);
+
+	position: absolute;
+	left: 0;
+	bottom: $control-padd + $elect-height;
+	width: 100%;
+	height: min-content;
+	max-height: 45vh;
+	overflow-y: auto;
+
+	option {
+		cursor: pointer;
+		padding: 1px .3rem;
+		margin: 2px 0;
+		transition: .1s;
+
+		&:hover {
+			background: rgba(0, 0, 0, 0.5);
+			color: white;
+		}
+	}
+	.curr-ov {
+		background: rgba(0, 0, 0, 0.75);
+		color: white;
+
+		&:hover {
+			background: rgba(0, 0, 0, 0.75);
+			color: white;
+		}
+	}
+}
+
+
+.form-control.is-invalid {
+	background-image: none;
+	border-color: $invalid;
+	
+	&:focus {
+		border-color: $invalid;
+		box-shadow: inset 0 0 0 1px $invalid;
+	}
+}
+
+.form-label,
+.form-select-label {
+	pointer-events: none;
+	position: absolute;
+	top: 1rem;
+	left: .75rem;
+	font-size: 1.2rem;
+	white-space: nowrap;
+	color: gray;
+	transition: .1s;
+
+	&.is-invalid {
+		color: $invalid;
+	}
+}
+
+.form-select-label {
+	top: .2rem;
+	font-size: .9rem;
+}
+
+.invalid-feedback {
+	position: relative;
+	left: 4px;
+	padding: 0;
+	margin: 0;
+	color: $invalid;
+}
+
+
+
+.in-top {
+	top: .2rem;
+	font-size: .9rem;
+}
+
+.foc-blue {
+	color: $focus-blue;
+}
+
+.bullseye {
+	position: absolute;
+	top: .35rem;
+	right: .5rem;
+	z-index: 5;
+	cursor: pointer;
+	padding: .5rem;
+	margin-top: .15rem;
+	opacity: .5;
+}
+
+
+.code-input {
+	outline: none;
+	border: none;
+	background-color: transparent;
+}
+
+.input-notice {
+	position: absolute;
+	top: -1.5rem;
+	padding-left: .4rem;
+	color: rgb(111, 65, 129);
+}
+
+
+

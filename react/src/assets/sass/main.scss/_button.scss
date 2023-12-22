@@ -1,0 +1,57 @@
+.btn {
+	border-radius: 200px;
+	padding-top: .375rem;
+	padding-bottom: .375rem;
+	font-weight: 600;
+}
+
+.btn-dark:hover {
+	color: rgb(43, 43, 43);
+	background-color: rgb(250, 250, 250);
+	border-color: rgb(189, 189, 189);
+}
+.btn-light:hover {
+	background-color: rgb(43, 43, 43);
+	color: white;
+}
+
+// close form button
+
+.btn-close {
+	display: block;
+	position: absolute;
+	top: 15px;
+	left: 15px;
+	z-index: 99999;
+
+	&:focus {
+		border: none;
+		box-shadow: none;
+	}
+	
+	&:hover::after {
+	content: '';
+	position: absolute;
+	top: -8px;
+	left: -8px;
+	background: rgba(0, 0, 0, .1);
+	padding: 20px;
+	border-radius: 100%;
+	color: black;
+	}
+}
+
+// next & save form button
+
+.signup-next {
+	padding: .5rem 3rem;
+	font-size: 1.2rem;
+}
+
+.next-btn {
+	padding: .65rem 3rem;	
+}
+
+.save-btn {
+	
+}

@@ -1,0 +1,46 @@
+
+@media(max-width:992px) {
+	.start-container {
+		padding: 1vw;
+	}
+	.start-figure {
+		display: block;
+
+		> img {
+			max-height: 150px;
+			max-width: 170px;
+			padding: 2rem 0 2rem 0;
+		}
+	}
+	.start-section {
+		max-width: 100%;
+		width: min-content;
+	}
+	.start-section h1 {
+		font-size: 6.25vw;
+	}
+
+}
+
+@media(max-width:480px) {
+	.start-section {
+		max-width: 100%;
+	}
+	.start-section h1 {
+		font-size: 1.75rem;
+		max-width: 100%;
+	}
+}
+
+@media (min-width:767.998px) {
+	.form {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		border-radius: 20px;
+		width: 600px;
+		height: 600px;
+		padding-top: 0;
+	}
+}

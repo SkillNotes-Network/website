@@ -1,0 +1,19 @@
+.quest-i {
+	position: relative;
+	bottom: .15rem;
+	cursor: pointer;
+
+	svg {
+		height: 21px;
+		width: 21px;
+		margin: 0 0 0 8px;
+		transition: .1s;
+
+		&:hover {
+			height: 23px;
+			width: 23px;
+			margin: 0 0 0 6px;
+		}
+
+	}
+}
