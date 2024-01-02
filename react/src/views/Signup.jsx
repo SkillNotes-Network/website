@@ -13,7 +13,7 @@ import DateModel from "../Modules/DateModel.js";
 import TitleAttrMode from '../Modules/TitleAttrMode.js';
 import LongButton from "../component/Form/LongButton.jsx";
 import CreatBtnLayout from "../component/Form/FormBtnLayout.jsx";
-import ServerError from "../component/Status/ServerError.jsx";
+import ResponseStatus from "../component/Response/ResponseStatus.jsx";
 
 const Signup = () => {
 	const STEPS = 4;
@@ -24,7 +24,7 @@ const Signup = () => {
 	const emailRef = useRef();
 	const passwordRef = useRef();
 	const passwordConfirmationRef = useRef();
-	const {setUser, setSessionToken} = useStateContext();
+	// const {setUser, setSessionToken} = useStateContext();
 	const [pwdType, setPwdType] = useState(false);
 	const [pwdConfType, setPwdConfType] = useState(false);
 	const [errors, setErrors] = useState(null);
@@ -49,7 +49,7 @@ const Signup = () => {
 	const [countLetter, setCountLetter] = useState(false);
 	const [throttle, setThrottle] = useState(false);
 	const [timer, setTimer] = useState(0);
-	const [errStatus, setErrStatus] = useState(false);
+	const [currentStatus, setCurrentStatus] = useState(false);
 	const date = new DateModel(selectYear, selectMonth, selectDay);
 
 	const regex = {
@@ -94,11 +94,16 @@ const Signup = () => {
 		console.log(payload)
 
 		axiosClient.post('/signup', payload)
-			.then(({data}) => {
-				setUser(data.user);
-				setSessionToken(data.token);
+			.then(({ data }) => {
+				// setUser(data.user);
+				// setSessionToken(data.token);
+				data.user && responseHandling({ 
+					status: 200,
+					statusText: 'Please check your email inbox and certify yourself',
+					icon: true,
+				});
 			})
-			.catch((err) => (err.response) && responseErrHandling(err.response));
+			.catch((err) => (err.response) && responseHandling(err.response));
 		setThrottle(true);
 		setBtnStatus(false);
 		setTimeout(() => setThrottle(false), THROTTLE);
@@ -112,21 +117,21 @@ const Signup = () => {
 			}
 		} else {
 			if (save) setBtnStatus(!throttle);
-			setErrStatus(false);
+			setCurrentStatus(false);
 		}
 	}
 
-	const responseErrHandling = (resp = {}) => {
-		const { status, data, statusText } = resp;
+	const responseHandling = (resp = {}) => {
+		const { status, data, statusText, icon = false } = resp;
 		switch (status) {
 			case 422:
 				setErrors(data.errors);
 				break;
 			default:
-				setErrStatus({
+				setCurrentStatus({
 					code: status,
-					data: data,
 					msg: statusText,
+					icon: icon,
 				});
 				break;
 		}
@@ -357,26 +362,30 @@ const Signup = () => {
 		setSave(result);
 	};
 
-	if (timer === 0 && errStatus) return (<Navigate to='/' />);
+	if (timer === 0 && currentStatus) return (<Navigate to='/' />);
 
 	return (
 		<form className="px-3 pb-3 w-100 h-100 d-flex flex-column justify-content-between position-relative" onSubmit={onSubmit} autoComplete="off">
 			<div className='form-signup-row mx-auto'>
 
-				{errStatus && <ServerError timer={throttle ? `${timer}s ` : ''} msg={errStatus.msg} />}
+				{currentStatus && 
+					<ResponseStatus 
+						timer={throttle ? `${timer}s ` : ''} 
+						msg={currentStatus.msg} 
+					/>}
 
-				{!errStatus && <div className="form-stepof">Step {count} of {STEPS}</div>}
+				{!currentStatus && <div className="form-stepof">Step {count} of {STEPS}</div>}
 
-				{(count === 1 && !errStatus) && <Profession fn={checkStep1} role={role} />}
+				{(count === 1 && !currentStatus) && <Profession fn={checkStep1} role={role} />}
 
-				{(count === 2 && !errStatus) && <Language fn={checkStep2} check={captcha} />}
+				{(count === 2 && !currentStatus) && <Language fn={checkStep2} check={captcha} />}
 
-				{(count === 3 || count === 4 && !errStatus) && 
+				{(count === 3 || count === 4 && !currentStatus) && 
 				<fieldset>
 					<div className={"control-box" + (count === 3 ? ' mb-4' : ' mb-3')}>
 						<strong className="form-headline">Create your account</strong>					
 					</div>
-					{(count === 3 && !errStatus) &&
+					{(count === 3 && !currentStatus) &&
 					<Input 
 						ref={nameRef} 
 						onFocus={focusInput} 
@@ -389,7 +398,7 @@ const Signup = () => {
 						notice={(nameNotice && name.search(/\s\w/ig) < 1)}
 						feedback={(errors && errors.name) && errors.name[0]} 
 					/>}
-					{(count === 3 && !errStatus) &&
+					{(count === 3 && !currentStatus) &&
 					<SelectLayout 
 						month={
 						<Select 
@@ -428,7 +437,7 @@ const Signup = () => {
 						focYear={focusYear}
 						feedback={(errors && errors.birth) && errors.birth[0]}
 					 />}
-					{(count === 4 && !errStatus) &&
+					{(count === 4 && !currentStatus) &&
 					<Input 
 						ref={emailRef} 
 						onFocus={focusInput} 
@@ -440,7 +449,7 @@ const Signup = () => {
 						value={email} 
 						feedback={(errors && errors.email) && errors.email[0]} 
 					/>}
-					{(count === 4 && !errStatus) &&
+					{(count === 4 && !currentStatus) &&
 					<Input 
 						svg={<Bullseye svg={pwdType ? Visibility : VisibilityOff} 
 						onClick={() => setPwdType(!pwdType)} />} 
@@ -454,7 +463,7 @@ const Signup = () => {
 						value={pwd} 
 						feedback={(errors && errors.password) && errors.password[0]} 
 					/>}
-					{(count === 4 && !errStatus) &&
+					{(count === 4 && !currentStatus) &&
 					<Input 
 						svg={<Bullseye svg={pwdConfType ? Visibility : VisibilityOff} 
 						onClick={() => setPwdConfType(!pwdConfType)} />} 
@@ -470,7 +479,7 @@ const Signup = () => {
 					/>}
 				</fieldset>}
 
-				{!errStatus && <CreatBtnLayout
+				{!currentStatus && <CreatBtnLayout
 					back={
 						<LongButton
 							onClick={dekCounter}

@@ -20,7 +20,7 @@ datalist {
 	z-index: 9;
 }
 
-.server-err {
+.server-status {
 	width: min(100%, max(450px));
 	height: 600px;
 	min-height: 100%;
@@ -28,7 +28,7 @@ datalist {
 	align-items: center;
 	justify-content: center;
 
-	.err-msg {
+	.status-msg {
 		text-align: center;
 		font-size: calc(1.25vw + .6em);
 	}
